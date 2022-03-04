@@ -1338,7 +1338,7 @@ msgid "Download Latest Client"
 msgstr "下载最新版本客户端"
 
 msgid "Download"
-msgstr "下载到本地"
+msgstr "下载"
 
 msgid "Restore Default Config"
 msgstr "还原默认配置"
