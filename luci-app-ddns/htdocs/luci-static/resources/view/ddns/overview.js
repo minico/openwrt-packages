@@ -262,43 +262,6 @@ return view.extend({
 		s.tab('info', _('Information'));
 		s.tab('global', _('Global Settings'));
 
-		o = s.taboption('info', form.DummyValue, '_version', _('Dynamic DNS Version'));
-		o.cfgvalue = function() {
-			return status[this.option];
-		};
-
-		o = s.taboption('info', form.DummyValue, '_enabled', _('State'));
-		o.cfgvalue = function() {
-			var res = status[this.option];
-			if (!res) {
-				this.description = _("Currently DDNS updates are not started at boot or on interface events.") + "<br />" +
-				_("This is the default if you run DDNS scripts by yourself (i.e. via cron with force_interval set to '0')")
-			}
-			return res ? _('DDNS Autostart enabled') : _('DDNS Autostart disabled')
-		};
-
-		o = s.taboption('info', form.Button, '_toggle');
-		o.title      = '&#160;';
-		o.inputtitle = _((status['_enabled'] ? 'stop' : 'start').toUpperCase() + ' DDns');
-		o.inputstyle = 'apply';
-		o.onclick = L.bind(this.handleToggleDDns, this, m);
-
-		o = s.taboption('info', form.Button, '_restart');
-		o.title      = '&#160;';
-		o.inputtitle = _('Restart DDns');
-		o.inputstyle = 'apply';
-		o.onclick = L.bind(this.handleRestartDDns, this, m);
-
-		o = s.taboption('info', form.DummyValue, '_services_list', _('Services list last update'));
-		o.cfgvalue = function() {
-			return status[this.option];
-		};
-
-		o = s.taboption('info', form.Button, '_refresh_services');
-		o.title      = '&#160;';
-		o.inputtitle = _('Update DDns Services List');
-		o.inputstyle = 'apply';
-		o.onclick = L.bind(this.handleRefreshServicesList, this, m);
 
 		// DDns hints
 
@@ -393,67 +356,6 @@ return view.extend({
 			_("Install 'ca-certificates' package or needed certificates " +
 				"by hand into /etc/ssl/certs default directory")};
 		}
-
-		// Advanced Configuration Section
-
-		o = s.taboption('global', form.Flag, 'upd_privateip', _("Allow non-public IP's"));
-		o.description = _("Non-public and by default blocked IP's") + ':'
-		+ '<br /><strong>IPv4: </strong>'
-		+ '0/8, 10/8, 100.64/10, 127/8, 169.254/16, 172.16/12, 192.168/16'
-		+ '<br /><strong>IPv6: </strong>'
-		+ '::/32, f000::/4"';
-		o.default = "0";
-		o.optional = true;
-
-		o = s.taboption('global', form.Value, 'ddns_dateformat', _('Date format'));
-		o.description = '<a href="http://www.cplusplus.com/reference/ctime/strftime/" target="_blank">'
-			+ _("For supported codes look here")
-			+ '</a><br />' +
-			_('Current setting: ') + '<b>' + status['_curr_dateformat'] + '</b>';
-		o.default = "%F %R"
-		o.optional = true;
-		o.rmempty = true;
-
-		o = s.taboption('global', form.Value, 'ddns_rundir', _('Status directory'));
-		o.description = _('Directory contains PID and other status information for each running section.');
-		o.default = "/var/run/ddns";
-		o.optional = true;
-		o.rmempty = true;
-
-		o = s.taboption('global', form.Value, 'ddns_logdir', _('Log directory'));
-		o.description = _('Directory contains Log files for each running section.');
-		o.default = "/var/log/ddns";
-		o.optional = true;
-		o.rmempty = true;
-		o.validate = function(section_id, formvalue) {
-			if (formvalue.indexOf('../') !== -1)
-				return _('"../" not allowed in path for Security Reason.')
-
-			return true;
-		}
-
-		o = s.taboption('global', form.Value, 'ddns_loglines', _('Log length'));
-		o.description = _('Number of last lines stored in log files');
-		o.datatype = 'min(1)';
-		o.default = '250';
-
-		if (env['has_wget'] && env['has_curl']) {
-
-			o = s.taboption('global', form.Flag, 'use_curl', _('Use cURL'));
-			o.description = _('If Wget and cURL package are installed, Wget is used for communication by default.');
-			o.default = "0";
-			o.optional = true;
-			o.rmempty = true;
-
-		}
-
-		o = s.taboption('global', form.Value, 'cacert', _('Ca Certs path'));
-		o.description = _('Ca Certs path that will be used to download services data. Set IGNORE to skip certificate validation.');
-		o.placeholder = 'IGNORE';
-
-		o = s.taboption('global', form.Value, 'services_url', _('Services URL Download'));
-		o.description = _('Url used to download services file. By default is the master openwrt ddns package repo.');
-		o.placeholder = 'https://raw.githubusercontent.com/openwrt/packages/master/net/ddns-scripts/files';
 
 		// DDns services
 		s = m.section(form.GridSection, 'service', _('Services'));
@@ -568,11 +470,10 @@ return view.extend({
 				stop_opt['disabled'] = 'disabled';
 
 			dom.content(tdEl.lastChild, [
-				E('button', stop_opt, _('Stop')),
-				E('button', reload_opt, _('Reload')),
 				tdEl.lastChild.childNodes[0],
 				tdEl.lastChild.childNodes[1],
-				tdEl.lastChild.childNodes[2]
+				tdEl.lastChild.childNodes[2],
+				E('button', reload_opt, _('Reload'))
 			]);
 
 			return tdEl;
