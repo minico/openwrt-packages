@@ -46,7 +46,7 @@ return baseclass.extend({
 			cpuTable.append(
 				E('tr', { 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '33%' },
-						(cpuStatArray[i][0] === Infinity) ? _('Total Load') : _('CPU') + ' ' + cpuStatArray[i][0]),
+						(cpuStatArray[i][0] === Infinity) ? _('Total Load') : _('利用率')),
 
 					E('td', { 'class': 'td' },
 						E('div', {
