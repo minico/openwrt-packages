@@ -3,7 +3,7 @@
 'require fs';
 
 return baseclass.extend({
-	title: _('CPU Load'),
+	title: _('CPU'),
 
 	load: function() {
 		return L.resolveDefault(fs.read('/proc/stat'), null);
