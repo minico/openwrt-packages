@@ -58,7 +58,7 @@ div > label + select {
 	width: 15%;
 }
 #progressbar_panel > .tr > .td:nth-child(1) {
-	width: 10%;
+	width: 5%;
 }
 .tr.table-totals {
 	background: #e0e0e0 !important;

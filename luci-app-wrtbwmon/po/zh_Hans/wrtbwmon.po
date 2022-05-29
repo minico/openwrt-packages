@@ -8,8 +8,8 @@ msgstr "10秒"
 
 #: htdocs/luci-static/resources/view/wrtbwmon/details.js:184
 #: htdocs/luci-static/resources/view/wrtbwmon/details.js:632
-msgid "2 seconds"
-msgstr "2秒"
+msgid "1 seconds"
+msgstr "1秒"
 
 #: htdocs/luci-static/resources/view/wrtbwmon/details.js:184
 #: htdocs/luci-static/resources/view/wrtbwmon/details.js:635
@@ -89,7 +89,7 @@ msgstr "下行带宽"
 
 #: htdocs/luci-static/resources/view/wrtbwmon/details.js:641
 msgid "Downstream:"
-msgstr "下行："
+msgstr "下行"
 
 #: htdocs/luci-static/resources/view/wrtbwmon/custom.js:18
 msgid "Each line must have the following format:"

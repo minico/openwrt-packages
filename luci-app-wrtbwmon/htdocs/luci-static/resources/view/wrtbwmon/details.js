@@ -181,7 +181,7 @@ function handleConfig(ev) {
 
 		arglist = [
 			[ui.Select, _('Default Protocol'), 'ipv4', {'ipv4': _('ipv4'), 'ipv6': _('ipv6')}, {}, ''],
-			[ui.Select, _('Default Refresh Interval'), '5', {'-1': _('Disabled'), '2': _('2 seconds'), '5': _('5 seconds'), '10': _('10 seconds'), '30': _('30 seconds')}, {sort: ['-1', '2', '5', '10', '30']}, ''],
+			[ui.Select, _('Default Refresh Interval'), '1', {'-1': _('Disabled'), '1': _('1 seconds'), '5': _('5 seconds'), '10': _('10 seconds'), '30': _('30 seconds')}, {sort: ['-1', '1', '5', '10', '30']}, ''],
 			[ui.Checkbox, _('Default More Columns'), false, {value_enabled: true, value_disabled: false}, ''],
 			[ui.Checkbox, _('Show Zeros'), true, {value_enabled: true, value_disabled: false}, ''],
 			[ui.Checkbox, _('Transfer Speed in Bits'), false, {value_enabled: true, value_disabled: false}, ''],
@@ -255,7 +255,7 @@ function parseDatabase(values, hosts, showZero, hideMACs) {
 
 function parseDefaultSettings(file) {
 	var keylist = ['protocol', 'interval', 'showMore', 'showZero', 'useBits', 'useMultiple', 'useDSL', 'upstream', 'downstream', 'hideMACs'];
-	var valuelist = ['ipv4', '5', false, true, false, '1000', false, '100', '100', []];
+	var valuelist = ['ipv4', '1', false, true, false, '1000', false, '100', '100', []];
 
 	return fs.read_direct(file).then(function(json) {
 		var settings;
@@ -383,7 +383,6 @@ function setSortedColumn(sorting) {
 }
 
 function setUpdateMessage(e, sec) {
-	e.innerHTML = sec < 0 ? '' : _('Updating again in %s second(s).').format('<b>' + sec + '</b>');
 }
 
 function sortTable(col, IPVer, flag, x, y) {
@@ -429,7 +428,6 @@ function updateData(settings, table, updated, updating, once) {
 			//console.time('start');
 			cachedData = parseDatabase(res[0].data || '', res[1], settings.showZero, settings.hideMACs);
 			displayTable(table, settings);
-			updated.textContent = _('Last updated at %s.').format(formatDate(new Date(document.lastModified)));
 			//console.timeEnd('start');
 		});
 	}
@@ -589,25 +587,6 @@ return view.extend({
 			E('div', { 'class': 'cbi-section' }, [
 				E('div', { 'id': 'control_panel' }, [
 					E('div', {}, [
-						E('label', {}, _('Protocol:')),
-						E('select', {
-							'id': 'selectProtocol',
-							'change': clickToSelectProtocol.bind(this, settings, table, labelUpdated, labelUpdating)
-							}, initOption({
-								'ipv4': 'ipv4',
-								'ipv6': 'ipv6'
-								}, settings.protocol))
-					]),
-					E('div', {}, [
-						E('label', { 'for': 'showMore' }, _('Show More Columns:')),
-						E('input', {
-							'id': 'showMore',
-							'type': 'checkbox',
-							'click': clickToShowMore.bind(this, settings, table),
-							'checked': settings.showMore ? '' : null
-						}),
-					]),
-					E('div', {}, [
 						E('button', {
 							'class': 'btn cbi-button cbi-button-reset important',
 							'id': 'resetDatabase',
@@ -621,31 +600,8 @@ return view.extend({
 					])
 				]),
 				E('div', {}, [
-					E('div', {}, [ labelUpdated, labelUpdating ]),
-					E('div', {}, [
-						E('label', { 'for': 'selectInterval' }, _('Auto update every:')),
-						E('select', {
-							'id': 'selectInterval',
-							'change': clickToSelectInterval.bind(this, settings, labelUpdating)
-							}, initOption({
-								'-1': _('Disabled'),
-								'2': _('2 seconds'),
-								'5': _('5 seconds'),
-								'10': _('10 seconds'),
-								'30': _('30 seconds')
-								}, settings.interval))
-					])
 				]),
 				E('div', { 'id': 'progressbar_panel', 'class': 'table' }, [
-					E('div', { 'class': 'tr' }, [
-						E('div', { 'class': 'td' }, E('div', {}, _('Downstream:'))),
-						E('div', { 'class': 'td' }, E('div', {
-							'id': 'downstream',
-							'class': 'cbi-progressbar',
-							'title': '-'
-							}, E('div')
-						))
-					]),
 					E('div', { 'class': 'tr' }, [
 						E('div', { 'class': 'td' }, E('div', {}, _('Upstream:'))),
 						E('div', { 'class': 'td' }, E('div', {
@@ -655,6 +611,15 @@ return view.extend({
 							}, E('div')
 						))
 					]),
+       E('div', { 'class': 'tr' }, [                                       
+                E('div', { 'class': 'td' }, E('div', {}, _('Downstream:'))),     
+                E('div', { 'class': 'td' }, E('div', {                           
+                        'id': 'downstream',                                                                      
+                        'class': 'cbi-progressbar',                         
+                        'title': '-'                                        
+                        }, E('div')                                         
+                ))                                                          
+        ]) 
 				]),
 				table
 			])
